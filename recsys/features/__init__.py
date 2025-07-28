@@ -1,8 +1,9 @@
-from . import articles, customers, transactions, interaction
+from . import articles, customers, transactions, interaction, ranking
 
 __all__ = [
     "articles",
     "customers",
     "transactions",
-    "interaction"
+    "interaction",
+    "ranking"
 ]
