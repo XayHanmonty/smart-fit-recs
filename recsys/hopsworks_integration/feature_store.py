@@ -159,3 +159,58 @@ def create_retrieval_feature_view(fs):
 
     return feature_view
 
+def create_ranking_feature_views(fs):
+    customers_fg = fs.get_feature_group(
+        name="customers",
+        version=1,
+    )
+
+    articles_fg = fs.get_feature_group(
+        name="articles",
+        version=1,
+    )
+
+    rank_fg = fs.get_feature_group(
+        name="ranking",
+        version=1,
+    )
+
+    trans_fg = fs.get_feature_group(
+        name="transactions",
+        version=1)
+
+    selected_features_customers = customers_fg.select_all()
+    fs.get_or_create_feature_view(
+        name="customers",
+        query=selected_features_customers,
+        version=1,
+    )
+
+    selected_features_articles = articles_fg.select_except(["embeddings"])
+    fs.get_or_create_feature_view(
+        name="articles",
+        query=selected_features_articles,
+        version=1,
+    )
+
+    # Select features
+    selected_features_ranking = rank_fg.select_except(["customer_id", "article_id"]).join(trans_fg.select(["month_sin", "month_cos"]))
+    feature_view_ranking = fs.get_or_create_feature_view(
+        name="ranking",
+        query=selected_features_ranking,
+        labels=["label"],
+        version=1,
+    )   
+
+    return feature_view_ranking
+
+
+def create_candidate_embeddings_feature_view(fs, fg):
+    feature_view = fs.get_or_create_feature_view(
+        name="candidate_embeddings",
+        version=1,
+        description="Embeddings of each article",
+        query=fg.select(["article_id"]),
+    )
+
+    return feature_view

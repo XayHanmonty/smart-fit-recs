@@ -7,3 +7,9 @@ install:
 
 feature-engineering:
 	uv run ipython notebooks/computing_features.ipynb
+
+train-retrieval:
+	uv run ipython notebooks/training_retrieval_model.ipynb
+
+train-ranking:
+	uv run ipython notebooks/training_ranking_model.ipynb
